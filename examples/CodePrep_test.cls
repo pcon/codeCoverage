@@ -248,4 +248,48 @@ public class CodePrep_test {
 		System.assertEquals(1, results.size(), 'There should be a survey');
 		System.assertEquals(testContact.Id, results.get(0).Contact__c, 'The contact was not set correctly');
 	}
+
+	static testMethod void beforeHandler_bulk() {
+		Contact testContact = TestUtils.getContact();
+		insert testContact;
+
+		CustomObject__c closedObj = TestUtils.getWoSObj(testContact);
+		CustomObject__c WoCObj = TestUtils.getWoSObj();
+		CustomObject__c WoSObj = TestUtils.getWoCObj();
+
+		List<CustomObject__c> newObjs = new List<CustomObject__c> { closedObj, WoCObj, WoSObj };
+		insert newObjs;
+
+		Map<Id, CustomObject__c> oldMap = new Map<Id, CustomObject__c> {
+			closedObj.Id = closedObj.clone(true, false, true, true),
+			WoCObj.Id = WoCObj.clone(true, false, true, true),
+			WoSObj.Id = WoSObj.clone(true, false, true, true)
+		};
+
+		closedObj.Status__c = CodePrep_after.CLOSED;
+		WoSObj.Status__c = CodePrep_after.WAITING_ON_SUPPORT;
+		WoCObj.Status__c = CodePrep_after.WAITING_ON_CUSTOMER;
+
+		List<CustomSurvey__c> results = TestUtils.fetchAllSurveys();
+
+		System.assertEquals(null, closedObj.InternalStatus__c, 'The internal status should not be set');
+		System.assertEquals(null, WoSObj.InternalStatus__c, 'The internal status should not be set');
+		System.assertEquals(null, WoCObj.InternalStatus__c, 'The internal status should not be set');
+		System.assertEquals(0, results.size(), 'There should be no surveys yet');
+
+		Test.startTest();
+
+		CodePrep_after.beforeHandler(newObjs, oldMap);
+
+		Test.stopTest();
+
+		List<CustomSurvey__c> results = TestUtils.fetchAllSurveys();
+
+		System.assertEquals(null, closedObj.InternalStatus__c, 'The internal status should not be set');
+		System.assertEquals(CodePrep_after.WAITING_ON_SUPPORT, WoSObj.InternalStatus__c, 'The internal status is not correct');
+		System.assertEquals(CodePrep_after.WAITING_ON_CUSTOMER, WoCObj.InternalStatus__c, 'The internal status is not correct');
+
+		System.assertEquals(1, results.size(), 'There should be a survey');
+		System.assertEquals(testContact.Id, results.get(0).Contact__c, 'The contact was not set correctly');
+	}
 }

@@ -1,4 +1,4 @@
-@IsTest
+@isTest
 public class Now_test {
 	static testMethod void setLastPublicUpdateToNow_valid() {
 		Datetime NOW = Datetime.newInstance(2018, 7, 29, 7, 28, 0);

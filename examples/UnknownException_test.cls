@@ -1,3 +1,4 @@
+@isTest
 public class UnknownException_Test {
 	static testMethod void riskyBusiness_negative() {
 		Exception_after.THROW_EXCEPTION = true;

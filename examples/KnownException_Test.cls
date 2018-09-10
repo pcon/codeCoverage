@@ -2,7 +2,13 @@
 public class KnownException_Test {
 	static testMethod void positiveTest() {
 		Integer i = 10;
+
+		Test.startTest();
+
 		String result = KnownException.myMethod(i);
+
+		Test.stopTest();
+
 		String expectedResult = KnownException.RESULT_STRING + i;
 
 		System.assertEquals(expectedResult, result, 'Wrong result');
@@ -10,6 +16,8 @@ public class KnownException_Test {
 
 	static testMethod void negativeTest() {
 		Integer i = 0;
+
+		Test.startTest();
 
 		try {
 			String result = KnownException.myMethod(i);
@@ -20,5 +28,7 @@ public class KnownException_Test {
 				'Right exception type, wrong message'
 			);
 		}
+
+		Test.stopTest();
 	}
 }

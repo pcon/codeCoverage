@@ -12,6 +12,6 @@ public class Now_after {
 	}
 
 	public static void setLastPublicUpdateToNow(Case c) {
-		c.LastPublicUpdate__c = Datetime.now();
+		c.LastPublicUpdate__c = NOW;
 	}
 }

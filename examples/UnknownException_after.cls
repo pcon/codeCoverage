@@ -12,6 +12,7 @@ public class UnknownException_after {
 
 	public static void riskyBusiness(List<CustomObject__c> objs) {
 		try {
+			generateExceptionForTesting();
 			doRiskyOperation(objs);
 		} catch (Exception e) {
 			ApexPages.Message.addMessage(new ApexPages.Message(UNHANDLED_PREFIX + e.getMessage()));
